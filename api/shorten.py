@@ -1,7 +1,6 @@
-# api/handlers.py
-
 from fastapi import Request, HTTPException
 from datetime import datetime, timedelta
+
 from db.db import insert_url, fetch_url_by_short
 from utils.utils import generate_short_url
 from models.errcode import ErrorCode
@@ -28,7 +27,7 @@ def create_short_url_handler(request: ShortenRequest):
         )
 
     short_url = generate_short_url()
-    expiration_date = (datetime.utcnow() + timedelta(days=30)).isoformat()
+    expiration_date = (datetime.now() + timedelta(days=30)).isoformat()
     insert_url(str(original_url), short_url, expiration_date)
 
     return {"short_url": short_url, "expiration_date": expiration_date, "success": True}
@@ -45,7 +44,7 @@ def redirect_url_handler(request: Request, short_url: str):
             }
         )
     original_url, expiration_date = result
-    if datetime.utcnow() > datetime.fromisoformat(expiration_date):
+    if datetime.now() > datetime.fromisoformat(expiration_date):
         raise HTTPException(
             status_code=200,
             detail={
