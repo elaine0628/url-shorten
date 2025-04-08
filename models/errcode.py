@@ -24,8 +24,4 @@ class ErrorCode:
         "message": "Short URL expired",
     }
 
-    RATE_LIMIT_EXCEEDED = {
-        "code": 1003,
-        "message": "Rate limit exceeded",
-    }
 

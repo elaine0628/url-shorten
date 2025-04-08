@@ -18,24 +18,28 @@ from api.shorten import create_short_url_handler, redirect_url_handler
 def test_create_short_url_success(mock_gen, mock_insert):
     request = ShortenRequest(original_url="https://example.com")
     result = create_short_url_handler(request)
-    assert result["short_url"] == "abc123"
-    assert result["success"] is True
-    assert "expiration_date" in result
+
+    assert result.error_code == ErrorCode.SUCCESS["code"]
+    assert result.data["short_url"] == "abc123"
+    assert result.data["success"] is True
+    assert "expiration_date" in result.data
 
 
 def test_create_short_url_invalid_url():
     request = ShortenRequest(original_url="ftp://invalid")
-    with pytest.raises(HTTPException) as exc:
-        create_short_url_handler(request)
-    assert exc.value.detail["error_code"] == ErrorCode.INVALID_URL["code"]
+    result = create_short_url_handler(request)
+
+    assert result.error_code == ErrorCode.INVALID_URL["code"]
+    assert result.data == ErrorCode.INVALID_URL["message"]
 
 
 def test_create_short_url_too_long():
     long_url = "https://example.com/" + "a" * 2050
     request = ShortenRequest(original_url=long_url)
-    with pytest.raises(HTTPException) as exc:
-        create_short_url_handler(request)
-    assert exc.value.detail["error_code"] == ErrorCode.URL_TOO_LONG["code"]
+    result = create_short_url_handler(request)
+
+    assert result.error_code == ErrorCode.URL_TOO_LONG["code"]
+    assert result.data == ErrorCode.URL_TOO_LONG["message"]
 
 
 # --- redirect_url_handler 測試 ---
@@ -57,9 +61,10 @@ def test_redirect_url_success(mock_fetch):
 @patch("api.shorten.fetch_url_by_short", return_value=None)
 def test_redirect_url_not_found(mock_fetch):
     fake_request = MagicMock(Request)
-    with pytest.raises(HTTPException) as exc:
-        redirect_url_handler(fake_request, "notfound")
-    assert exc.value.detail["error_code"] == ErrorCode.SHORT_URL_NOT_FOUND["code"]
+    result = redirect_url_handler(fake_request, "notfound")
+
+    assert result.error_code == ErrorCode.SHORT_URL_NOT_FOUND["code"]
+    assert result.data == ErrorCode.SHORT_URL_NOT_FOUND["message"]
 
 
 @patch("api.shorten.fetch_url_by_short")
@@ -70,6 +75,7 @@ def test_redirect_url_expired(mock_fetch):
         (datetime.now() - timedelta(days=1)).isoformat()
     )
 
-    with pytest.raises(HTTPException) as exc:
-        redirect_url_handler(fake_request, "expired123")
-    assert exc.value.detail["error_code"] == ErrorCode.SHORT_URL_EXPIRED["code"]
+    result = redirect_url_handler(fake_request, "expired123")
+
+    assert result.error_code == ErrorCode.SHORT_URL_EXPIRED["code"]
+    assert result.data == ErrorCode.SHORT_URL_EXPIRED["message"]

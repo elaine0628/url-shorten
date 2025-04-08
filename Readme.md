@@ -1,7 +1,7 @@
 # URL Shortener API Documentation
 
 ## Overview
-This API provides a simple URL shortening service. Users can create short URLs that redirect to their original URLs. The service includes expiration handling and rate limiting.
+This API provides a simple URL shortening service. Users can create short URLs that redirect to their original URLs.
 
 ## Base URL
 ```
@@ -39,19 +39,28 @@ POST /shorten
 ### **Example Response:**
 ```json
 {
-  "short_url": "abc123",
-  "expiration_date": "2025-04-30T12:00:00",
-  "success": true
+  "error_code": 0,
+  "data": {
+    "short_url": "abc123",
+    "expiration_date": "2025-04-30T12:00:00",
+    "success": true
+  }
 }
 ```
 
 ### **Errors:**
-| Status Code | Message                |
-|------------|------------------------|
-| 400        | Invalid URL format     |
-| 429        | Rate limit exceeded    |
-| 500        | Internal server error  |
+| Status Code | error_code | data                   |
+|-------------|------------|------------------------|
+| 200         |600         | Invalid URL format     |
+| 200         |601         | URL is too long        |
 
+### **Example Response:**
+```json
+{
+  "error_code": 600,
+  "data": "Invalid URL format"
+}
+```
 ---
 
 ## **2. Redirect Using Short URL**
@@ -69,12 +78,18 @@ GET /{short_url}
 - **Redirects to the original URL** if the short URL is valid and not expired.
 
 ### **Errors:**
-| Status Code | Message                    |
-|------------|----------------------------|
-| 404        | Short URL not found        |
-| 410        | Short URL expired          |
-| 429        | Rate limit exceeded        |
+| Status Code | error_code | data                   |
+|-------------|------------|------------------------|
+| 200         |602         | Short URL not found    |
+| 200         |603         | Short URL expired      |
 
+### **Example Response:**
+```json
+{
+  "error_code": 602,
+  "data": "Short URL not found"
+}
+```
 ---
 
 ## **How to Run with Docker**
@@ -89,14 +104,6 @@ GET /{short_url}
 3. **Access API Docs:**
    - Swagger UI: [http://127.0.0.1:4000/docs](http://127.0.0.1:4000/docs)
    - ReDoc: [http://127.0.0.1:4000/redoc](http://127.0.0.1:4000/redoc)
-
----
-
-## **Rate Limits**
-| Endpoint       | Limit            |
-|---------------|------------------|
-| POST /shorten | 5 requests/minute |
-| GET /{short_url} | 10 requests/minute |
 
 ---
 
