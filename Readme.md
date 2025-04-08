@@ -107,5 +107,66 @@ GET /{short_url}
 
 ---
 
+## **Settings**
+
+The application can be configured using a YAML settings file and environment variables.
+
+### **setting/settings.yaml**
+
+```yaml
+app:
+  port: 4000
+```
+
+### **Override with Environment Variables**
+
+You can override the port with the `PORT` environment variable:
+
+```sh
+PORT=8080 python3 main.py
+```
+
+## **Run Tests**
+
+```bash
+make install     # Install dependencies
+make coverage    # Run tests and display/open coverage report
+make clean       # Clean up temporary files and reports
+
+```
+
+---
+
+## **Project Structure**
+
+```
+url-shortener/
+├── api/
+│   ├── api.py         # Route registration
+│   ├── shorten.py     # Handler functions
+├── config/
+│   └── settings.py    # Load YAML and env config
+├── db/
+│   └── db.py          # Database logic
+├── models/
+│   ├── schema.py      # Pydantic models
+│   └── errcode.py     # Error codes
+├── server/
+│   ├── server.py      # App factory and middleware
+├── utils/
+│   └── utils.py       # Short URL generator, helpers
+├── setting/
+│   └── settings.yaml  # YAML config
+├── test/
+│   └── test_shorten.py # Unit tests for handlers
+├── main.py            # Entrypoint
+├── requirements.txt
+├── Dockerfile
+├── .gitignore
+└── README.md
+```
+
+---
+
 ## **License**
 This API is open-source and free to use. Contributions are welcome!
