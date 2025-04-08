@@ -6,7 +6,7 @@ _settings = None
 def load_settings():
     global _settings
     if _settings is None:
-        project_root = os.path.dirname(os.path.abspath(__file__)) 
+        project_root = os.path.dirname(os.path.abspath(__file__))
         config_path = os.path.join(project_root, '..', 'setting', 'setting.yaml')
         config_path = os.path.abspath(config_path)
 

@@ -1,2 +1,6 @@
 __pycache__/
 *.db
+
+# Coverage reports
+htmlcov/
+.coverage
