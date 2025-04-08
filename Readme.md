@@ -145,7 +145,7 @@ url-shortener/
 │   ├── api.py         # Route registration
 │   ├── shorten.py     # Handler functions
 ├── config/
-│   └── settings.py    # Load YAML and env config
+│   └── config.py      # Load YAML and env config
 ├── db/
 │   └── db.py          # Database logic
 ├── models/
@@ -156,10 +156,10 @@ url-shortener/
 ├── utils/
 │   └── utils.py       # Short URL generator, helpers
 ├── setting/
-│   └── settings.yaml  # YAML config
+│   └── setting.yaml   # YAML config
 ├── test/
 │   └── test_shorten.py # Unit tests for handlers
-├── main.py            # Entrypoint
+├── main.py             # Entrypoint
 ├── requirements.txt
 ├── Dockerfile
 ├── .gitignore
