@@ -130,6 +130,7 @@ PORT=8080 python3 main.py
 
 ```bash
 make install     # Install dependencies
+make test        # Run tests
 make coverage    # Run tests and display/open coverage report
 make clean       # Clean up temporary files and reports
 
