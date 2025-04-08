@@ -1,12 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from server.limiter import limiter
 from api.api import router
 from db.db import init_db
 
 app = FastAPI()
-app.state.limiter = limiter
 
 app.add_middleware(
     CORSMiddleware,
