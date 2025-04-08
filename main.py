@@ -3,7 +3,6 @@ import yaml
 import uvicorn
 
 from config.config import settings
-
 from server.server import app
 
 if __name__ == "__main__":

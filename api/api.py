@@ -8,7 +8,6 @@ router = APIRouter()
 
 @router.post(
     "/shorten",
-    response_model=ShortenResponse,
     responses={
         200: {"model": APIResponse},
     },
