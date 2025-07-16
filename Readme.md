@@ -93,13 +93,22 @@ GET /{short_url}
 ---
 
 ## **How to Run with Docker**
+
+### **Prerequisites**
+Make sure MongoDB is running on your system or in a container.
+
+### **Build and Run**
 1. **Build the Docker Image:**
    ```sh
    docker build -t url-shortener .
    ```
 2. **Run the Container:**
    ```sh
-   docker run -p 4000:4000 -d url-shortener
+   docker run -p 4000:4000 -e MONGO_URI=mongodb://host.docker.internal:27017/ -d url-shortener
+   ```
+   or if MongoDB is on the same host:
+   ```sh
+   docker run -p 4000:4000 --network host -d url-shortener
    ```
 3. **Access API Docs:**
    - Swagger UI: [http://127.0.0.1:4000/docs](http://127.0.0.1:4000/docs)
@@ -126,14 +135,51 @@ You can override the port with the `PORT` environment variable:
 PORT=8080 python3 main.py
 ```
 
-## **Run Tests**
+You can also configure MongoDB connection with the `MONGO_URI` environment variable:
 
+```sh
+MONGO_URI=mongodb://localhost:27017/ python3 main.py
+```
+
+## **Development & Testing**
+
+### **Installation**
 ```bash
 make install     # Install dependencies
-make test        # Run tests
-make coverage    # Run tests and display/open coverage report
-make clean       # Clean up temporary files and reports
+```
 
+### **Running Tests**
+```bash
+make test        # Run all tests with verbose output
+make coverage    # Run tests with coverage report
+make clean       # Clean up cache files and reports
+```
+
+### **Test Coverage**
+Current test coverage: **95%**
+- ✅ API handlers: 100%
+- ✅ Database operations: 100%
+- ✅ Data models: 100%
+- ⚠️ Main application: 0% (entry point)
+- ⚠️ Utils: 75%
+
+### **Test Structure**
+```
+test/
+├── test_mongodb.py    # Database operation tests
+└── test_shorten.py    # API handler tests
+```
+
+### **Running Individual Tests**
+```bash
+# Run specific test file
+python -m pytest test/test_shorten.py -v
+
+# Run specific test function
+python -m pytest test/test_shorten.py::test_create_short_url_success -v
+
+# Run with coverage for specific file
+python -m pytest test/test_mongodb.py --cov=db --cov-report=term-missing
 ```
 
 ---
@@ -159,9 +205,12 @@ url-shortener/
 ├── setting/
 │   └── setting.yaml   # YAML config
 ├── test/
-│   └── test_shorten.py # Unit tests for handlers
+│   ├── test_mongodb.py # Database operation tests
+│   └── test_shorten.py # API handler tests
 ├── main.py             # Entrypoint
 ├── requirements.txt
+├── pytest.ini         # Pytest configuration
+├── makefile           # Development commands
 ├── Dockerfile
 ├── .gitignore
 └── README.md

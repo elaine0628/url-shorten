@@ -7,4 +7,5 @@ from server.server import app
 
 if __name__ == "__main__":
     port = settings["app"]["port"]
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    # 在除錯模式下，使用 reload=False 避免模組重載
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

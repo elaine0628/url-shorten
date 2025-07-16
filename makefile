@@ -2,17 +2,20 @@
 
 install:
 	pip install -r requirements.txt
-	pip install pytest coverage
 
 test:
-	coverage run --source=api,models,db,utils -m pytest
+	python -m pytest -v
+
+test-coverage:
+	python -m pytest --cov=. --cov-report=html --cov-report=term-missing
+
+coverage: test-coverage
 
 report:
 	coverage report
 	coverage html
-	open htmlcov/index.html
-
-coverage: test report
 
 clean:
 	rm -rf __pycache__ .pytest_cache .coverage htmlcov
+	rm -rf data/
+	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
