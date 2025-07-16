@@ -3,3 +3,6 @@ __pycache__/
 # Coverage reports
 htmlcov/
 .coverage
+
+# Virtual environment
+venv/
