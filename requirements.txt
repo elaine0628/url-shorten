@@ -5,3 +5,4 @@ slowapi
 pyyaml
 pymongo
 pytest
+pytest-cov
